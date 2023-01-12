@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Guestbook index{% endblock %}
+
+{% block body %}
+    <h1>Guestbook index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Guest review message</th>
+                <th>Guest review image</th>
+                <th>CreatedAt</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>UpdatedAt</th>
+                    <th>UserId</th>
+                    <th>IsDeleted</th>
+                    <th>IsActive</th>
+                    <th>actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for guestbook in guestbooks %}
+            <tr>
+                <td class="center">{{ loop.index }}</td>
+                <td>{{ guestbook.text }}</td>
+                <td class="center">
+                    {% if guestbook.image %}
+                    <image width="200" src="/images/guestbook/{{ guestbook.image }}" />
+                    {% else %}
+                        - No image -
+                    {% endif %}
+                </td>
+                <td>{{ guestbook.createdAt ? guestbook.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% set active = guestbook.isActive ? '0' : '1' %}
+                    {% set approve = guestbook.isActive ? 'unapprove' : 'approve' %}
+                    <td>{{ guestbook.updatedAt ? guestbook.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ guestbook.user.email }}</td>
+                    <td class="center">{{ guestbook.isDeleted ? 'Yes' : 'No' }}</td>
+                    <td class="center">{{ guestbook.isActive ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <a href="{{ path('app_guestbook_approve', {'id': guestbook.id, 'active': active}) }}">
+                            {{ approve }}
+                        </a> |
+                        <a href="{{ path('app_guestbook_edit', {'id': guestbook.id}) }}">edit</a> |
+                        <a href="{{ path('app_guestbook_delete', {'id': guestbook.id}) }}">delete</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('app_guestbook_new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

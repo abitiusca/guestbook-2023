@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+
+<div class="header">
+    <div class="main_menu">
+        <h3>
+            <a
+                    class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
+                    href="{{ path('index') }}"
+                    @click="isOpen = false">
+                Home
+            </a>
+        </h3>
+    </div>
+    <div class="right_menu">
+        <h3>
+            Hello ✅ {{ app.user ? app.user.email : '' }} |
+            <a
+                    class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
+                    href="/{{ app.user ? 'logout' : 'login' }}"
+                    @click="isOpen = false">
+                {{ app.user ? 'logout' : 'login' }}</a> |
+            <a
+                    class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
+                    href="/register"
+                    @click="isOpen = false">
+                register
+            </a>
+            {% if is_granted('ROLE_ADMIN') %}
+                | Role: admin
+            {% endif %}
+        </h3>
+    </div>
+
+</div>
+{% endblock %}
