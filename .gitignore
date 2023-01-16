@@ -11,6 +11,7 @@
 /app/node_modules/
 /mysql/
 ###< symfony/framework-bundle ###
+/app/.env
 
 
 
